@@ -637,7 +637,7 @@ body {
 
 textarea {
     width: 100%;
-    padding: 12px 45px 12px 12px;
+    padding: 12px 70px 12px 12px; 
     border: 1px solid var(--border-color);
     border-radius: 6px;
     resize: none;
@@ -715,7 +715,6 @@ pre {
     }
 }
 
-
 .attach-button {
     position: absolute;
     right: 50px;  /* Позиционируем слева от кнопки отправки, подвинув правее */
@@ -730,4 +729,27 @@ pre {
     align-items: center;
     justify-content: center;
     transition: background-color 0.2s ease;
+}
+
+.attach-button:hover {
+    background-color: var(--hover-color);
+}
+.image-preview {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    width: 15%;
+    overflow-x: auto;
+}
+.image-preview img {
+    max-height: 25px;
+    margin-right: 10px;
+    border-radius: 3px;
+    border: 1px solid var(--border-color);
+}
+.image-preview .remove-btn {
+    cursor: pointer;
+    color: red;
+    margin-left: 5px;
+    font-size: 14px;
 }

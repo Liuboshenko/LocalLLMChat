@@ -12,7 +12,8 @@ const state = {
     chatHistory: [],
     currentChatId: null,
     isGenerating: false,
-    theme: 'light'  // Default theme
+    theme: 'light',  // Default theme
+    attachedImages: [], //array of base64 strings
 };
 
 // DOM Elements
@@ -27,6 +28,10 @@ const clearStorageBtn = document.getElementById('clear-storage-btn');
 const confirmationModal = document.getElementById('confirmation-modal');
 const modalCancel = document.getElementById('modal-cancel');
 const modalConfirm = document.getElementById('modal-confirm');
+//
+const attachButton = document.getElementById('attach-button');
+const fileInput = document.getElementById('file-input');
+const imagePreview = document.getElementById('image-preview');
 
 // Initialize app
 function initApp() {
@@ -106,6 +111,8 @@ function renderChatHistory() {
 // Create a new chat
 function createNewChat() {
     state.messages = [];
+    state.attachedImages = [];
+    imagePreview.innerHTML = '';
     state.currentChatId = Date.now().toString();
     
     // Add system message
@@ -128,6 +135,8 @@ function createNewChat() {
 
 // Load a chat from history
 function loadChat(chatId) {
+    state.attachedImages = [];
+    imagePreview.innerHTML = '';
     const chat = state.chatHistory.find(c => c.id === chatId);
     if (chat) {
         state.currentChatId = chat.id;
@@ -211,6 +220,22 @@ function setupEventListeners() {
     document.addEventListener('keydown', (event) => {
         if (event.key === 'Escape' && confirmationModal.classList.contains('active')) {
             hideConfirmationModal();
+        }
+    });
+    
+    // Добавленные обработчики для прикрепления изображений
+    attachButton.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', async (event) => {
+        const files = event.target.files;
+        if (files.length > 0) {
+            for (const file of files) {
+                if (file.type.startsWith('image/')) {
+                    const base64 = await fileToBase64(file);
+                    state.attachedImages.push(base64);
+                    displayImagePreview(base64);
+                }
+            }
+            event.target.value = ''; // Reset input for re-selection
         }
     });
 }
@@ -534,10 +559,12 @@ async function sendMessage() {
     
     appendMessageToUI('user', userMessage);
     
-    state.messages.push({
-        role: 'user',
-        content: userMessage
+    // Замена: Включаем изображения в content, если они прикреплены
+    const userContent = [{ type: 'text', text: userMessage }];
+    state.attachedImages.forEach(base64 => {
+        userContent.push({ type: 'image_url', image_url: { url: base64 } });
     });
+    state.messages.push({ role: 'user', content: userContent });
     
     updateChatTitle(userMessage);
     const chatIndex = state.chatHistory.findIndex(chat => chat.id === state.currentChatId);
@@ -660,6 +687,10 @@ async function sendMessage() {
             content: `<think>${reasoningText}</think>${answerText}`
         });
         
+        // Очистка прикреплений после успешного ответа
+        state.attachedImages = [];
+        imagePreview.innerHTML = '';
+        
         const updatedChatIndex = state.chatHistory.findIndex(chat => chat.id === state.currentChatId);
         if (updatedChatIndex !== -1) {
             state.chatHistory[updatedChatIndex].messages = [...state.messages];
@@ -675,6 +706,31 @@ async function sendMessage() {
         sendButton.disabled = userInput.value.trim() === '';
         userInput.focus();
     }
+}
+
+// Convert file to base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+}
+// Display preview thumbnail
+function displayImagePreview(base64) {
+    const previewItem = document.createElement('div');
+    previewItem.className = 'preview-item';
+    previewItem.innerHTML = `
+        <img src="${base64}" alt="Attached image">
+        <span class="remove-btn">×</span>
+    `;
+    previewItem.querySelector('.remove-btn').addEventListener('click', () => {
+        const index = state.attachedImages.indexOf(base64);
+        if (index > -1) state.attachedImages.splice(index, 1);
+        previewItem.remove();
+    });
+    imagePreview.appendChild(previewItem);
 }
 
 // Initialize the app
