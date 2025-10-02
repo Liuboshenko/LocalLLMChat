@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local LLM Chat Interface</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Add marked.js for markdown parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/marked@4.0.0/marked.min.js"></script>
+    <!-- Add KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.0/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Confirmation Modal -->
+        <div id="confirmation-modal" class="modal-overlay">
+            <div class="modal">
+                <div class="modal-title">Clear All Data</div>
+                <div class="modal-content">
+                    Are you sure you want to clear all chat history and settings? This action cannot be undone.
+                </div>
+                <div class="modal-actions">
+                    <button id="modal-cancel" class="modal-btn modal-btn-cancel">Cancel</button>
+                    <button id="modal-confirm" class="modal-btn modal-btn-confirm">Clear Data</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <button class="new-chat" id="new-chat-btn">
+                <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                New chat
+            </button>
+            <div class="theme-switcher">
+                <label for="theme-select">Theme</label>
+                <select id="theme-select">
+                    <option value="light">Light</option>
+                    <option value="dark">Dark</option>
+                    <option value="night-blue">Night Blue</option>
+                    <option value="sepia">Sepia</option>
+                </select>
+            </div>
+            <div class="history-container" id="history-container"></div>
+            <div class="sidebar-footer">
+                <button id="clear-storage-btn" class="clear-storage-btn">
+                    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="16" width="16" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path><path d="M3 6v14c0 1 1 2 2 2h14c1 0 2-1 2-2V6"></path><path d="M10 11v6"></path><path d="M14 11v6"></path></svg>
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Chat Area -->
+        <div class="main">
+            <div class="chat-container" id="chat-container">
+                <div id="welcome-screen" class="welcome-screen">
+                    <h1>Local LLM Chat Interface</h1>
+                    <p>This is a simple interface for interacting with your local language model. Type a message below to start a conversation.</p>
+                </div>
+            </div>
+            <div class="input-area">
+                <div class="input-container">
+                    <textarea id="user-input" placeholder="Type your message..." rows="1"></textarea>
+                    <button id="send-button" class="send-button" disabled>
+                        <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="24" width="24" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
