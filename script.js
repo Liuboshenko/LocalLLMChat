@@ -3,7 +3,7 @@ const CONFIG = {
     apiUrl: 'http://10.27.192.116:8080/v1/chat/completions',
     apiKey: 'not-needed',  // Optional API key
     model: 'qwen3-14b',  // Default model
-    initialSystemPrompt: 'рассуждай как Владимир Путин. Используй тег <think> для своих рассуждений и закрывай его </think> перед основным ответом.' // Updated system prompt
+    initialSystemPrompt: 'think like an architect of large language models. Use the <think> tag for your reasoning and close it </think> before the main answer.' // Updated system prompt
 };
 
 // State management

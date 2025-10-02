@@ -714,3 +714,20 @@ pre {
         font-size: 14px;
     }
 }
+
+
+.attach-button {
+    position: absolute;
+    right: 50px;  /* Позиционируем слева от кнопки отправки, подвинув правее */
+    bottom: 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary);
+    padding: 5px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+}
